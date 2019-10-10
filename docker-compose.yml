@@ -1,0 +1,6 @@
+gateway:
+  image: mozillaiot/gateway
+  ports:
+    - 8080:8080
+  volumes:
+    - ./dist:/home/node/.mozilla-iot/addons/tellstick-adapter
