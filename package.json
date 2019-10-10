@@ -1,0 +1,44 @@
+{
+  "name": "tellstick-adapter",
+  "version": "0.0.1",
+  "description": "Telldus Tellstick adapter add-on for Mozilla WebThings Gateway",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --listEmittedFiles",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/majori/tellstick-adapter.git"
+  },
+  "author": "Antti Kivimäki",
+  "license": "MIT",
+  "keywords": [
+    "mozilla",
+    "iot",
+    "adapter",
+    "tellstick",
+    "telldus"
+  ],
+  "bugs": {
+    "url": "https://github.com/majori/tellstick-adapter/issues"
+  },
+  "homepage": "https://github.com/majori/tellstick-adapter#readme",
+  "devDependencies": {
+    "@types/node": "^12.7.4",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "gateway-addon": "git+https://github.com/mozilla-iot/gateway-addon-node.git",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.2"
+  },
+  "dependencies": {},
+  "moziot": {
+    "api": {
+      "min": 2,
+      "max": 2
+    },
+    "plugin": true,
+    "exec": "{nodeLoader} {path}"
+  }
+}
