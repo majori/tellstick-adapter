@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc --listEmittedFiles",
     "lint": "eslint --ext .ts src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha \"test/**/*.test.ts\""
   },
   "repository": {
     "type": "git",
@@ -26,13 +26,17 @@
   },
   "homepage": "https://github.com/majori/tellstick-adapter#readme",
   "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.4",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
+    "chai": "^4.2.0",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
     "gateway-addon": "git+https://github.com/mozilla-iot/gateway-addon-node.git",
+    "mocha": "^6.2.1",
     "prettier": "^1.18.2",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.2"

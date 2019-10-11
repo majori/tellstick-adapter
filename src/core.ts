@@ -29,6 +29,15 @@ class TellstickCore {
   }
 
   private parseConnectionOptions(path: string): net.NetConnectOpts {
+    // TODO: This is naive approach
+    if (path.includes(':')) {
+      const parts = path.split(':');
+      return {
+        host: parts[0],
+        port: parseInt(parts[1], 10),
+      };
+    }
+
     return {
       path,
     };

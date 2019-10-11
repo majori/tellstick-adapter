@@ -1,0 +1,2 @@
+--require test/common.ts
+--require ts-node/register/transpile-only
