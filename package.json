@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --listEmittedFiles",
+    "lint": "eslint --ext .ts src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,19 +27,42 @@
   "homepage": "https://github.com/majori/tellstick-adapter#readme",
   "devDependencies": {
     "@types/node": "^12.7.4",
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
+    "@typescript-eslint/parser": "^2.3.3",
+    "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
     "gateway-addon": "git+https://github.com/mozilla-iot/gateway-addon-node.git",
+    "prettier": "^1.18.2",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.2"
   },
   "dependencies": {},
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "dist/constants.js",
+    "dist/index.js",
+    "dist/core.js",
+    "dist/tellstick-adapter.js"
+  ],
   "moziot": {
     "api": {
       "min": 2,
       "max": 2
     },
     "plugin": true,
-    "exec": "{nodeLoader} {path}"
+    "exec": "{nodeLoader} {path}",
+    "config": {
+      "socket": "/tmp/TelldusClient"
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "socket": {
+          "type": "string"
+        }
+      }
+    }
   }
 }
