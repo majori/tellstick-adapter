@@ -7,6 +7,9 @@ class TellstickCore {
 
   constructor(socketPath: string) {
     this.connectionOptions = this.parseConnectionOptions(socketPath);
+    this.listDevices = this.listDevices.bind(this);
+    this.turnOn = this.turnOn.bind(this);
+    this.turnOff = this.turnOff.bind(this);
   }
 
   public async listDevices(): Promise<Device[]> {

@@ -1,31 +1,56 @@
 import { Adapter, Device, Property } from 'gateway-addon';
 import TellstickCore from './core';
 
-class TellstickDevice extends Device {
-  constructor(adapter: Adapter, id: string, name: string) {
+class TellstickProperty extends Property<TellstickDevice> {
+  async setValue(value: unknown) {
+    const { client } = this.device.adapter;
+
+    switch (this.name) {
+      case 'on':
+        const action = value ? client.turnOn : client.turnOff;
+        action(+this.device.getId());
+        break;
+      // TODO: Support other properties
+      default:
+        throw new Error('Unsupported property');
+    }
+
+    const updatedValue = await super.setValue(value);
+    this.device.notifyPropertyChanged(this);
+    return updatedValue;
+  }
+}
+
+class TellstickDevice extends Device<TellstickAdapter> {
+  constructor(adapter: TellstickAdapter, id: string, name: string) {
     super(adapter, id);
     this.name = name;
-  }
 
-  createProperty(id: string, description: {}): Property {
-    const property = new Property(this, id, description);
-    this.properties.set(id, property);
-    return property;
+    // TODO: Check which methods the device supports
+    this['@type'] = ['OnOffSwitch'];
+    this.properties.set(
+      'on',
+      new TellstickProperty(this, 'on', {
+        title: 'On/Off',
+        type: 'boolean',
+        '@type': 'OnOffProperty',
+      }),
+    );
   }
 }
 
 class TellstickAdapter extends Adapter {
-  tellstick: TellstickCore;
+  client: TellstickCore;
 
   constructor(addonManager: any, manifest: any) {
     super(addonManager, TellstickAdapter.name, manifest.name);
     addonManager.addAdapter(this);
-    this.tellstick = new TellstickCore(manifest.moziot.config.socket);
+    this.client = new TellstickCore(manifest.moziot.config.socket);
     this.addDevices();
   }
 
   async addDevices() {
-    const devices = await this.tellstick.listDevices();
+    const devices = await this.client.listDevices();
     for (const device of devices) {
       this.handleDeviceAdded(new TellstickDevice(this, device.id.toString(), device.name));
     }
