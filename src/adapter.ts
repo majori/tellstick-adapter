@@ -1,5 +1,5 @@
 import { Adapter, Device, Property } from 'gateway-addon';
-import TellstickCore from './core';
+import TellstickClient from './client';
 
 class TellstickProperty extends Property<TellstickDevice> {
   async setValue(value: unknown) {
@@ -54,12 +54,12 @@ class TellstickDevice extends Device<TellstickAdapter> {
 }
 
 class TellstickAdapter extends Adapter {
-  client: TellstickCore;
+  client: TellstickClient;
 
   constructor(addonManager: any, manifest: any) {
     super(addonManager, TellstickAdapter.name, manifest.name);
     addonManager.addAdapter(this);
-    this.client = new TellstickCore(manifest.moziot.config.socket);
+    this.client = new TellstickClient(manifest.moziot.config.socket);
     this.addDevices();
   }
 

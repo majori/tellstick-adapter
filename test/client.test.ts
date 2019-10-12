@@ -1,12 +1,12 @@
 import 'mocha';
 import { expect } from 'chai';
-import TellstickCore from '../src/core';
+import TellstickClient from '../src/client';
 
-describe('TellstickCore', () => {
+describe('TellstickClient', () => {
   describe('constructor', () => {
     it('parses file paths correctly', () => {
       const path = '/tmp/Tellstick';
-      const core = new TellstickCore(path);
+      const core = new TellstickClient(path);
 
       expect(core.connectionOptions).to.eql({ path });
     });
@@ -14,7 +14,7 @@ describe('TellstickCore', () => {
     it('parses host and port correctly', () => {
       const host = '192.168.1.10';
       const port = 5000;
-      const core = new TellstickCore(`${host}:${port}`);
+      const core = new TellstickClient(`${host}:${port}`);
 
       expect(core.connectionOptions).to.eql({ host, port });
     });

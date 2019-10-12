@@ -1,3 +1,3 @@
-import TellstickAdapter from './tellstick-adapter';
+import TellstickAdapter from './adapter';
 
 export = (addonManager: any, manifest: any) => new TellstickAdapter(addonManager, manifest);

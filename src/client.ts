@@ -2,7 +2,7 @@ import net from 'net';
 import { Commands } from './constants';
 import { Device } from './types/core';
 
-class TellstickCore {
+class TellstickClient {
   connectionOptions: net.NetConnectOpts;
 
   constructor(socketPath: string) {
@@ -112,4 +112,4 @@ class TellstickCore {
   }
 }
 
-export default TellstickCore;
+export default TellstickClient;
