@@ -10,6 +10,10 @@ class TellstickProperty extends Property<TellstickDevice> {
         const action = value ? client.turnOn : client.turnOff;
         action(+this.device.getId());
         break;
+      case 'level':
+        const level = Math.round(((value as number) / 100) * 255);
+        client.dim(+this.device.getId(), level);
+        break;
       // TODO: Support other properties
       default:
         throw new Error('Unsupported property');
@@ -34,6 +38,16 @@ class TellstickDevice extends Device<TellstickAdapter> {
         title: 'On/Off',
         type: 'boolean',
         '@type': 'OnOffProperty',
+      }),
+    );
+
+    this.properties.set(
+      'level',
+      new TellstickProperty(this, 'level', {
+        title: 'Level',
+        type: 'integer',
+        unit: 'percent',
+        '@type': 'LevelProperty',
       }),
     );
   }

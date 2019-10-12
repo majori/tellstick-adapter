@@ -1,7 +1,8 @@
 {
   "name": "tellstick-adapter",
+  "display_name": "Tellstick",
   "version": "0.0.1",
-  "description": "Telldus Tellstick adapter add-on for Mozilla WebThings Gateway",
+  "description": "Telldus Tellstick adapter for Mozilla WebThings Gateway",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --listEmittedFiles",

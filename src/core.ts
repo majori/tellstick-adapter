@@ -31,6 +31,10 @@ class TellstickCore {
     return this.sendToService(Commands.TURN_OFF, id);
   }
 
+  public async dim(id: number, level: number) {
+    return this.sendToService(Commands.DIM, id, level);
+  }
+
   private parseConnectionOptions(path: string): net.NetConnectOpts {
     // TODO: This is naive approach
     if (path.includes(':')) {
@@ -46,9 +50,9 @@ class TellstickCore {
     };
   }
 
-  private async sendToService(command: Commands, parameter?: number): Promise<number | string> {
-    return new Promise((resolve, reject) => {
-      const buffer = Buffer.from(this.stringify(command, parameter), 'utf8');
+  private async sendToService(command: Commands, ...parameters: Array<number | string>) {
+    return new Promise<number | string>((resolve, reject) => {
+      const buffer = Buffer.from(this.stringify(command, parameters), 'utf8');
       const socket = net.createConnection(this.connectionOptions);
 
       socket.setEncoding('utf-8');
@@ -69,15 +73,20 @@ class TellstickCore {
     });
   }
 
-  private stringify(command: Commands, parameter?: number): string {
+  private stringify(command: Commands, parameters?: Array<number | string>): string {
     let result = `${command.length}:${command}`;
 
-    if (parameter) {
-      switch (typeof parameter) {
-        case 'number':
-          result += `i${parameter}s`;
-          break;
-      }
+    if (parameters) {
+      parameters.forEach(parameter => {
+        switch (typeof parameter) {
+          case 'number':
+            result += `i${parameter}s`;
+            break;
+          case 'string':
+            result += `${parameter.length}:${parameter}`;
+            break;
+        }
+      });
     }
 
     return result;
