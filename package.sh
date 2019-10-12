@@ -23,7 +23,7 @@ npm prune --production
 npm cache clean --force
 
 rm -f SHA256SUMS
-sha256sum package.json dist/*.js LICENSE > SHA256SUMS
+sha256sum package.json dist/*.js LICENSE README.md > SHA256SUMS
 find node_modules -type f -exec sha256sum {} \; >> SHA256SUMS
 TARFILE="$(npm pack)"
 tar xzf ${TARFILE}

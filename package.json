@@ -44,6 +44,7 @@
   "dependencies": {},
   "files": [
     "LICENSE",
+    "README.md",
     "SHA256SUMS",
     "dist/constants.js",
     "dist/index.js",
