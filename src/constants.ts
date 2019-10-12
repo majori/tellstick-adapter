@@ -18,12 +18,12 @@ export enum Methods {
   TURNOFF = 2,
   BELL = 4,
   TOGGLE = 8,
-  DIM = 1,
-  LEARN = 3,
-  EXECUTE = 6,
-  UP = 1,
-  DOWN = 2,
-  STOP = 5,
+  DIM = 16,
+  LEARN = 32,
+  EXECUTE = 64,
+  UP = 128,
+  DOWN = 256,
+  STOP = 512,
 }
 
 export enum Commands {

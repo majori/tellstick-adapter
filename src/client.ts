@@ -1,5 +1,5 @@
 import net from 'net';
-import { Commands } from './constants';
+import { Commands, Methods } from './constants';
 import { Device } from './types/core';
 
 class TellstickClient {
@@ -35,6 +35,13 @@ class TellstickClient {
     return this.sendToService(Commands.DIM, id, level);
   }
 
+  public async supportedMethods(id: number) {
+    const mask = Object.values(Methods)
+      .filter(m => typeof m === 'number')
+      .reduce((a, b) => a + (b as Methods), 0);
+    return this.sendToService(Commands.METHODS, id, mask) as Promise<number>;
+  }
+
   private parseConnectionOptions(path: string): net.NetConnectOpts {
     // TODO: This is naive approach
     if (path.includes(':')) {
@@ -52,7 +59,8 @@ class TellstickClient {
 
   private async sendToService(command: Commands, ...parameters: Array<number | string>) {
     return new Promise<number | string>((resolve, reject) => {
-      const buffer = Buffer.from(this.stringify(command, parameters), 'utf8');
+      const message = this.stringify(command, parameters);
+      const buffer = Buffer.from(message, 'utf8');
       const socket = net.createConnection(this.connectionOptions);
 
       socket.setEncoding('utf-8');
@@ -69,7 +77,9 @@ class TellstickClient {
         resolve(response);
       });
 
-      socket.write(buffer);
+      socket.on('connect', () => {
+        socket.write(buffer);
+      });
     });
   }
 

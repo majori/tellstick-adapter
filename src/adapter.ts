@@ -1,7 +1,8 @@
 import { Adapter, Device, Property } from 'gateway-addon';
+import { Methods } from './constants';
 import TellstickClient from './client';
 
-class TellstickProperty extends Property<TellstickDevice> {
+class SwitchProperty extends Property<SwitchDevice> {
   async setValue(value: unknown) {
     const { client } = this.device.adapter;
 
@@ -14,7 +15,6 @@ class TellstickProperty extends Property<TellstickDevice> {
         const level = Math.round(((value as number) / 100) * 255);
         client.dim(+this.device.getId(), level);
         break;
-      // TODO: Support other properties
       default:
         throw new Error('Unsupported property');
     }
@@ -25,25 +25,29 @@ class TellstickProperty extends Property<TellstickDevice> {
   }
 }
 
-class TellstickDevice extends Device<TellstickAdapter> {
+class SwitchDevice extends Device<TellstickAdapter> {
   constructor(adapter: TellstickAdapter, id: string, name: string) {
     super(adapter, id);
     this.name = name;
-
-    // TODO: Check which methods the device supports
     this['@type'] = ['OnOffSwitch'];
     this.properties.set(
       'on',
-      new TellstickProperty(this, 'on', {
+      new SwitchProperty(this, 'on', {
         title: 'On/Off',
         type: 'boolean',
         '@type': 'OnOffProperty',
       }),
     );
+  }
+}
+
+class DimmerDevice extends SwitchDevice {
+  constructor(adapter: TellstickAdapter, id: string, name: string) {
+    super(adapter, id, name);
 
     this.properties.set(
       'level',
-      new TellstickProperty(this, 'level', {
+      new SwitchProperty(this, 'level', {
         title: 'Level',
         type: 'integer',
         unit: 'percent',
@@ -66,7 +70,17 @@ class TellstickAdapter extends Adapter {
   async addDevices() {
     const devices = await this.client.listDevices();
     for (const device of devices) {
-      this.handleDeviceAdded(new TellstickDevice(this, device.id.toString(), device.name));
+      const methods = await this.client.supportedMethods(device.id);
+
+      if (methods & Methods.TURNON && methods & Methods.TURNOFF && methods & Methods.DIM) {
+        this.handleDeviceAdded(new DimmerDevice(this, device.id.toString(), device.name));
+        continue;
+      }
+
+      if (methods & Methods.TURNON && methods & Methods.TURNOFF) {
+        this.handleDeviceAdded(new SwitchDevice(this, device.id.toString(), device.name));
+        continue;
+      }
     }
   }
 }
