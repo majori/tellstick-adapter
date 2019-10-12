@@ -2,22 +2,25 @@ import { Adapter, Device, Property } from 'gateway-addon';
 import { Methods } from './constants';
 import TellstickClient from './client';
 
-class SwitchProperty extends Property<SwitchDevice> {
+class OnOffProperty extends Property<SwitchDevice> {
   async setValue(value: unknown) {
     const { client } = this.device.adapter;
 
-    switch (this.name) {
-      case 'on':
-        const action = value ? client.turnOn : client.turnOff;
-        action(+this.device.getId());
-        break;
-      case 'level':
-        const level = Math.round(((value as number) / 100) * 255);
-        client.dim(+this.device.getId(), level);
-        break;
-      default:
-        throw new Error('Unsupported property');
-    }
+    const action = value ? client.turnOn : client.turnOff;
+    await action(+this.device.getId());
+
+    const updatedValue = await super.setValue(value);
+    this.device.notifyPropertyChanged(this);
+    return updatedValue;
+  }
+}
+
+class LevelProperty extends Property<DimmerDevice> {
+  async setValue(value: unknown) {
+    const { client } = this.device.adapter;
+
+    const level = Math.round(((value as number) / 100) * 255);
+    await client.dim(+this.device.getId(), level);
 
     const updatedValue = await super.setValue(value);
     this.device.notifyPropertyChanged(this);
@@ -32,7 +35,7 @@ class SwitchDevice extends Device<TellstickAdapter> {
     this['@type'] = ['OnOffSwitch'];
     this.properties.set(
       'on',
-      new SwitchProperty(this, 'on', {
+      new OnOffProperty(this, 'on', {
         title: 'On/Off',
         type: 'boolean',
         '@type': 'OnOffProperty',
@@ -47,7 +50,7 @@ class DimmerDevice extends SwitchDevice {
 
     this.properties.set(
       'level',
-      new SwitchProperty(this, 'level', {
+      new LevelProperty(this, 'level', {
         title: 'Level',
         type: 'integer',
         unit: 'percent',
