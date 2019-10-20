@@ -1,8 +1,8 @@
 import net from 'net';
-import { Commands, Methods } from './constants';
-import { Device } from './types/core';
+import { Commands, Methods } from '../constants';
+import { Client, DeviceInfo } from '../types/client';
 
-class TellstickClient {
+class TelldusCoreClient implements Client {
   connectionOptions: net.NetConnectOpts;
 
   constructor(socketPath: string) {
@@ -12,9 +12,9 @@ class TellstickClient {
     this.turnOff = this.turnOff.bind(this);
   }
 
-  public async listDevices(): Promise<Device[]> {
+  public async listDevices() {
     const numberOfDevices = await this.sendToService(Commands.NUMBER_OF_DEVICES);
-    const devices: Device[] = [];
+    const devices: DeviceInfo[] = [];
     for (let i = 0; i < numberOfDevices; i++) {
       const id = (await this.sendToService(Commands.DEVICE_ID, i)) as number;
       const name = (await this.sendToService(Commands.NAME, id)) as string;
@@ -24,15 +24,15 @@ class TellstickClient {
   }
 
   public async turnOn(id: number) {
-    return this.sendToService(Commands.TURN_ON, id);
+    return this.sendToService(Commands.TURN_ON, id) as Promise<number>;
   }
 
   public async turnOff(id: number) {
-    return this.sendToService(Commands.TURN_OFF, id);
+    return this.sendToService(Commands.TURN_OFF, id) as Promise<number>;
   }
 
   public async dim(id: number, level: number) {
-    return this.sendToService(Commands.DIM, id, level);
+    return this.sendToService(Commands.DIM, id, level) as Promise<number>;
   }
 
   public async supportedMethods(id: number) {
@@ -122,4 +122,4 @@ class TellstickClient {
   }
 }
 
-export default TellstickClient;
+export default TelldusCoreClient;

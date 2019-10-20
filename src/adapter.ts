@@ -1,72 +1,19 @@
-import { Adapter, Device, Property } from 'gateway-addon';
+import { Adapter } from 'gateway-addon';
 import { Methods } from './constants';
-import TellstickClient from './client';
-
-class OnOffProperty extends Property<SwitchDevice> {
-  async setValue(value: unknown) {
-    const { client } = this.device.adapter;
-
-    const action = value ? client.turnOn : client.turnOff;
-    await action(+this.device.getId());
-
-    const updatedValue = await super.setValue(value);
-    this.device.notifyPropertyChanged(this);
-    return updatedValue;
-  }
-}
-
-class LevelProperty extends Property<DimmerDevice> {
-  async setValue(value: unknown) {
-    const { client } = this.device.adapter;
-
-    const level = Math.round(((value as number) / 100) * 255);
-    await client.dim(+this.device.getId(), level);
-
-    const updatedValue = await super.setValue(value);
-    this.device.notifyPropertyChanged(this);
-    return updatedValue;
-  }
-}
-
-class SwitchDevice extends Device<TellstickAdapter> {
-  constructor(adapter: TellstickAdapter, id: string, name: string) {
-    super(adapter, id);
-    this.name = name;
-    this['@type'] = ['OnOffSwitch'];
-    this.properties.set(
-      'on',
-      new OnOffProperty(this, 'on', {
-        title: 'On/Off',
-        type: 'boolean',
-        '@type': 'OnOffProperty',
-      }),
-    );
-  }
-}
-
-class DimmerDevice extends SwitchDevice {
-  constructor(adapter: TellstickAdapter, id: string, name: string) {
-    super(adapter, id, name);
-
-    this.properties.set(
-      'level',
-      new LevelProperty(this, 'level', {
-        title: 'Level',
-        type: 'integer',
-        unit: 'percent',
-        '@type': 'LevelProperty',
-      }),
-    );
-  }
-}
+import TelldusCoreClient from './clients/telldus-core';
+import { Client } from './types/client';
+import { DimmerDevice, SwitchDevice } from './devices';
 
 class TellstickAdapter extends Adapter {
-  client: TellstickClient;
+  client: Client;
 
   constructor(addonManager: any, manifest: any) {
     super(addonManager, TellstickAdapter.name, manifest.name);
     addonManager.addAdapter(this);
-    this.client = new TellstickClient(manifest.moziot.config.socket);
+
+    // TODO: Select client (TelldusCore or LocalAPI) based on manifest configs
+    this.client = new TelldusCoreClient(manifest.moziot.config.socket);
+
     this.addDevices();
   }
 
@@ -75,14 +22,11 @@ class TellstickAdapter extends Adapter {
     for (const device of devices) {
       const methods = await this.client.supportedMethods(device.id);
 
+      // Determine type of the device
       if (methods & Methods.TURNON && methods & Methods.TURNOFF && methods & Methods.DIM) {
         this.handleDeviceAdded(new DimmerDevice(this, device.id.toString(), device.name));
-        continue;
-      }
-
-      if (methods & Methods.TURNON && methods & Methods.TURNOFF) {
+      } else if (methods & Methods.TURNON && methods & Methods.TURNOFF) {
         this.handleDeviceAdded(new SwitchDevice(this, device.id.toString(), device.name));
-        continue;
       }
     }
   }
