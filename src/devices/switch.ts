@@ -8,14 +8,7 @@ class SwitchDevice extends Device<TellstickAdapter> {
     this.name = name;
     this['@type'] = ['OnOffSwitch'];
 
-    this.properties.set(
-      'on',
-      new OnOffProperty(this, 'on', {
-        title: 'On/Off',
-        type: 'boolean',
-        '@type': 'OnOffProperty',
-      }),
-    );
+    this.properties.set('on', new OnOffProperty(this));
   }
 }
 

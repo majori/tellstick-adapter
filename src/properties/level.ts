@@ -1,7 +1,16 @@
 import { Property, Device } from 'gateway-addon';
 import TellstickAdapter from '../adapter';
 
-class DimProperty extends Property<Device<TellstickAdapter>> {
+class LevelProperty extends Property<Device<TellstickAdapter>> {
+  constructor(device: Device<TellstickAdapter>) {
+    super(device, 'level', {
+      title: 'Level',
+      type: 'integer',
+      unit: 'percent',
+      '@type': 'LevelProperty',
+    });
+  }
+
   async setValue(value: unknown) {
     const { client } = this.device.adapter;
 
@@ -14,4 +23,4 @@ class DimProperty extends Property<Device<TellstickAdapter>> {
   }
 }
 
-export default DimProperty;
+export default LevelProperty;

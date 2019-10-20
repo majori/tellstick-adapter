@@ -1,4 +1,4 @@
 import OnOffProperty from './on-off';
-import DimProperty from './dim';
+import LevelProperty from './level';
 
-export { OnOffProperty, DimProperty };
+export { OnOffProperty, LevelProperty };
