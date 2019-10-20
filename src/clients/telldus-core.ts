@@ -42,6 +42,22 @@ class TelldusCoreClient implements Client {
     return this.sendToService(Commands.METHODS, id, mask) as Promise<number>;
   }
 
+  public async lastSentCommand(id: number) {
+    const methods = await this.supportedMethods(id);
+    return this.sendToService(Commands.LAST_SENT_COMMANDS, id, methods) as Promise<number>;
+  }
+
+  public async lastSentValue(id: number) {
+    return this.sendToService(Commands.LAST_SENT_VALUE, id);
+  }
+
+  public async lastSentCommandAndValue(id: number) {
+    return {
+      command: await this.lastSentCommand(id),
+      value: +(await this.lastSentValue(id)),
+    };
+  }
+
   private parseConnectionOptions(path: string): net.NetConnectOpts {
     // TODO: This is naive approach
     if (path.includes(':')) {
