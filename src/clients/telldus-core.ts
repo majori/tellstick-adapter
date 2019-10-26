@@ -48,7 +48,7 @@ class TelldusCoreClient implements Client {
   }
 
   public async lastSentValue(id: number) {
-    return this.sendToService(Commands.LAST_SENT_VALUE, id);
+    return this.sendToService(Commands.LAST_SENT_VALUE, id) as Promise<number>;
   }
 
   public async lastSentCommandAndValue(id: number) {
