@@ -16,9 +16,7 @@ class OnOffProperty extends Property<Device<TellstickAdapter>> {
     const action = value ? client.turnOn : client.turnOff;
     await action(+this.device.getId());
 
-    const updatedValue = await super.setValue(value);
-    this.device.notifyPropertyChanged(this);
-    return updatedValue;
+    return super.setValue(value);
   }
 }
 

@@ -7,6 +7,8 @@ class LevelProperty extends Property<Device<TellstickAdapter>> {
       title: 'Level',
       type: 'integer',
       unit: 'percent',
+      min: 1,
+      max: 100,
       '@type': 'LevelProperty',
     });
   }
@@ -17,9 +19,7 @@ class LevelProperty extends Property<Device<TellstickAdapter>> {
     const level = Math.round(((value as number) / 100) * 255);
     await client.dim(+this.device.getId(), level);
 
-    const updatedValue = await super.setValue(value);
-    this.device.notifyPropertyChanged(this);
-    return updatedValue;
+    return super.setValue(value);
   }
 }
 

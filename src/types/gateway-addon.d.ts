@@ -5,7 +5,10 @@ declare module 'gateway-addon' {
 
     constructor(device: D, name: string, propertyDescr: {});
     public setCachedValue(value: any): void;
-    public setValue(value: any): Promise<void>;
+    public setValue(value: any): Promise<any>;
+    public getValue(): Promise<any>;
+    public setCachedValueAndNotify(value: any): void;
+    public asPropertyDescription(): any;
   }
 
   class Device<A = Adapter> {

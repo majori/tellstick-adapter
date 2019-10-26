@@ -1,5 +1,4 @@
 export enum ErrorCodes {
-  SUCCESS = 0,
   ERROR_NOT_FOUND = -1,
   ERROR_PERMISSION_DENIED = -2,
   ERROR_DEVICE_NOT_FOUND = -3,

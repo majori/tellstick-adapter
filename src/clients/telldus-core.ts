@@ -1,5 +1,5 @@
 import net from 'net';
-import { Commands, Methods } from '../constants';
+import { Commands, Methods, ErrorCodes } from '../constants';
 import { Client, DeviceInfo } from '../types/client';
 
 class TelldusCoreClient implements Client {
@@ -44,17 +44,28 @@ class TelldusCoreClient implements Client {
 
   public async lastSentCommand(id: number) {
     const methods = await this.supportedMethods(id);
-    return this.sendToService(Commands.LAST_SENT_COMMANDS, id, methods) as Promise<number>;
+    const command = (await this.sendToService(Commands.LAST_SENT_COMMANDS, id, methods)) as number;
+
+    if (command < 0) {
+      throw new Error(ErrorCodes[command]);
+    }
+    return command;
   }
 
   public async lastSentValue(id: number) {
-    return this.sendToService(Commands.LAST_SENT_VALUE, id) as Promise<number>;
+    const value = await this.sendToService(Commands.LAST_SENT_VALUE, id);
+
+    if (value === 'UNKNOWN') {
+      return null;
+    }
+
+    return +value;
   }
 
   public async lastSentCommandAndValue(id: number) {
     return {
       command: await this.lastSentCommand(id),
-      value: +(await this.lastSentValue(id)),
+      value: await this.lastSentValue(id),
     };
   }
 

@@ -6,8 +6,8 @@ export class Client {
   public dim(id: number, level: number): Promise<unknown>;
   public supportedMethods(id: number): Promise<number>;
   public lastSentCommand(id: number): Promise<number>;
-  public lastSentValue(id: number): Promise<number>;
-  public lastSentCommandAndValue(id: number): Promise<{ command: number; value: number }>;
+  public lastSentValue(id: number): Promise<number | null>;
+  public lastSentCommandAndValue(id: number): Promise<{ command: number; value: number | null }>;
 }
 
 export interface DeviceInfo {
