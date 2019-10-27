@@ -57,9 +57,9 @@
     "dist/devices/index.js",
     "dist/devices/dimmer.js",
     "dist/devices/switch.js",
-    "dist/client/index.js",
-    "dist/client/telldus-core.js",
-    "dist/client/local-api.js"
+    "dist/clients/index.js",
+    "dist/clients/telldus-core.js",
+    "dist/clients/local-api.js"
   ],
   "moziot": {
     "api": {
