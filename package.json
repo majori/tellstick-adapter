@@ -1,7 +1,7 @@
 {
   "name": "tellstick-adapter",
   "display_name": "Tellstick",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Telldus Tellstick adapter for Mozilla WebThings Gateway",
   "main": "dist/index.js",
   "scripts": {
