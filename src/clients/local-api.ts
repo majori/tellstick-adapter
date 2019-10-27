@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Client } from '../types/client';
 
 class LocalAPIClient implements Client {

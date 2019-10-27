@@ -1,8 +1,8 @@
 import { Adapter } from 'gateway-addon';
 import { Methods } from './constants';
-import TelldusCoreClient from './clients/telldus-core';
-import { Client } from './types/client';
+import { TelldusCoreClient } from './clients';
 import { DimmerDevice, SwitchDevice } from './devices';
+import { Client } from './types/client';
 
 class TellstickAdapter extends Adapter {
   client: Client;
