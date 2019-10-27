@@ -4,3 +4,12 @@ gateway:
     - 8080:8080
   volumes:
     - ./dist:/home/node/.mozilla-iot/addons/tellstick-adapter
+
+telldus:
+  build:
+    context: ./telldus
+  restart: always
+  privileged: true
+  network_mode: host
+  volumes:
+    - ./tellstick.conf:/etc/tellstick.conf
