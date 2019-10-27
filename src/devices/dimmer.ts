@@ -4,10 +4,13 @@ import TellstickAdapter from '../adapter';
 import { LevelProperty, OnOffProperty } from '../properties';
 
 class DimmerDevice extends Device<TellstickAdapter> {
+  public propertiesWereJustSynced: boolean;
+
   constructor(adapter: TellstickAdapter, id: string, name: string) {
     super(adapter, id);
     this.name = name;
     this['@type'] = ['MultiLevelSwitch'];
+    this.propertiesWereJustSynced = false;
 
     this.properties.set('on', new OnOffProperty(this));
     this.properties.set('level', new LevelProperty(this));
@@ -19,9 +22,28 @@ class DimmerDevice extends Device<TellstickAdapter> {
     const description = property.asPropertyDescription();
     const value = await property.getValue();
 
-    if (description['@type'] === 'OnOffProperty') {
-      const level = value ? 100 : 0;
-      this.properties.get('level')!.setCachedValueAndNotify(level);
+    let syncProperty: Property;
+    switch (description['@type']) {
+      case 'OnOffProperty':
+        syncProperty = this.properties.get('level')!;
+        const level = value ? 100 : 0;
+        if (!this.propertiesWereJustSynced) {
+          syncProperty.setCachedValueAndNotify(level);
+          this.propertiesWereJustSynced = true;
+        } else {
+          this.propertiesWereJustSynced = false;
+        }
+        break;
+      case 'LevelProperty':
+        syncProperty = this.properties.get('on')!;
+        const state = value > 0;
+        if (!this.propertiesWereJustSynced && state !== (await syncProperty.getValue())) {
+          syncProperty.setCachedValueAndNotify(state);
+          this.propertiesWereJustSynced = true;
+        } else {
+          this.propertiesWereJustSynced = false;
+        }
+        break;
     }
 
     super.notifyPropertyChanged(property);
