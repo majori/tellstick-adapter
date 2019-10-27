@@ -14,10 +14,10 @@ class TellstickAdapter extends Adapter {
     // TODO: Select client (TelldusCore or LocalAPI) based on manifest configs
     this.client = new TelldusCoreClient(manifest.moziot.config.socket);
 
-    this.addDevices();
+    this.startPairing();
   }
 
-  async addDevices() {
+  async startPairing() {
     const devices = await this.client.listDevices();
     for (const device of devices) {
       const methods = await this.client.supportedMethods(device.id);
