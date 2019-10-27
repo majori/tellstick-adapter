@@ -47,6 +47,7 @@
     "LICENSE",
     "README.md",
     "SHA256SUMS",
+    "manifest.json",
     "dist/index.js",
     "dist/adapter.js",
     "dist/constants.js",
