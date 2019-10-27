@@ -47,10 +47,18 @@
     "LICENSE",
     "README.md",
     "SHA256SUMS",
-    "dist/constants.js",
     "dist/index.js",
-    "dist/core.js",
-    "dist/tellstick-adapter.js"
+    "dist/adapter.js",
+    "dist/constants.js",
+    "dist/properties/index.js",
+    "dist/properties/level.js",
+    "dist/properties/on-off.js",
+    "dist/devices/index.js",
+    "dist/devices/dimmer.js",
+    "dist/devices/switch.js",
+    "dist/client/index.js",
+    "dist/client/telldus-core.js",
+    "dist/client/local-api.js"
   ],
   "moziot": {
     "api": {

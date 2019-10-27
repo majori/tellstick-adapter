@@ -4,7 +4,7 @@ RUN apk add --no-cache bash tzdata eudev ca-certificates
 
 ENV LANG C.UTF-8
 
-# Install Telldus library for TellStick
+# Build telldus-core
 RUN apk add --no-cache \
   confuse libftdi1 libstdc++ jq socat \
   && apk add --no-cache --virtual .build-dependencies \
@@ -24,5 +24,7 @@ RUN apk add --no-cache \
 WORKDIR /usr
 ADD run.sh ./run.sh
 RUN chmod a+x ./run.sh
+
+EXPOSE 50800 50801
 
 CMD [ "./run.sh" ]
