@@ -32,8 +32,16 @@ declare module 'gateway-addon' {
     public handleDeviceAdded(device: Device): void;
   }
 
-  type AddonManager = any;
-  type Manifest = any;
+  interface AddonManager {
+    addAdapter(adapter: Adapter): void;
+  }
+
+  interface Manifest<C> {
+    name: string;
+    moziot: {
+      config: C;
+    };
+  }
 
   class Database {
     constructor(packageName: string, path?: string);

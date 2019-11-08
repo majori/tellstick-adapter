@@ -30,6 +30,7 @@
     "@types/chai": "^4.2.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.4",
+    "@types/sinon": "^7.5.0",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
     "chai": "^4.2.0",
@@ -39,10 +40,13 @@
     "gateway-addon": "git+https://github.com/mozilla-iot/gateway-addon-node.git",
     "mocha": "^6.2.1",
     "prettier": "^1.18.2",
+    "sinon": "^7.5.0",
     "ts-node": "^8.4.1",
-    "typescript": "^3.6.2"
+    "typescript": "^3.7.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.19.0"
+  },
   "files": [
     "LICENSE",
     "README.md",
@@ -68,14 +72,60 @@
     },
     "plugin": true,
     "exec": "{nodeLoader} {path}",
-    "config": {
-      "socket": "/tmp/TelldusClient"
-    },
     "schema": {
       "type": "object",
       "properties": {
-        "socket": {
-          "type": "string"
+        "client": {
+          "type": "string",
+          "enum": [
+            "local-api",
+            "telldus-core"
+          ],
+          "default": "local-api"
+        }
+      },
+      "required": [
+        "client"
+      ],
+      "dependencies": {
+        "client": {
+          "oneOf": [
+            {
+              "properties": {
+                "client": {
+                  "enum": [
+                    "local-api"
+                  ]
+                },
+                "url": {
+                  "type": "string"
+                },
+                "token": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url",
+                "token"
+              ]
+            },
+            {
+              "properties": {
+                "client": {
+                  "enum": [
+                    "telldus-core"
+                  ]
+                },
+                "socket": {
+                  "type": "string",
+                  "default": "/tmp/TelldusClient"
+                }
+              },
+              "required": [
+                "socket"
+              ]
+            }
+          ]
         }
       }
     }

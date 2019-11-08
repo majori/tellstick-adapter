@@ -17,14 +17,46 @@
     }
   },
   "options": {
-    "default": {
-      "socket": "/tmp/TelldusClient"
-    },
     "schema": {
       "type": "object",
       "properties": {
-        "socket": {
-          "type": "string"
+        "client": {
+          "type": "string",
+          "enum": ["local-api", "telldus-core"],
+          "default": "local-api"
+        }
+      },
+      "required": ["client"],
+      "dependencies": {
+        "client": {
+          "oneOf": [
+            {
+              "properties": {
+                "client": {
+                  "enum": ["local-api"]
+                },
+                "url": {
+                  "type": "string"
+                },
+                "token": {
+                  "type": "string"
+                }
+              },
+              "required": ["url", "token"]
+            },
+            {
+              "properties": {
+                "client": {
+                  "enum": ["telldus-core"]
+                },
+                "socket": {
+                  "type": "string",
+                  "default": "/tmp/TelldusClient"
+                }
+              },
+              "required": ["socket"]
+            }
+          ]
         }
       }
     }

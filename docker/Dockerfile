@@ -1,4 +1,5 @@
-FROM arm32v7/alpine
+ARG BASE_IMAGE=arm32v7/alpine
+FROM $BASE_IMAGE
 
 RUN apk add --no-cache bash tzdata eudev ca-certificates
 
