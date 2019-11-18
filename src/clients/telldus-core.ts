@@ -80,7 +80,7 @@ class TelldusCoreClient implements Client {
     }
 
     return {
-      socket,
+      path: socket,
     };
   }
 

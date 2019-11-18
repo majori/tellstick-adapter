@@ -8,7 +8,7 @@ describe('telldus-core', () => {
       const socket = '/tmp/Tellstick';
       const client = new TelldusCoreClient({ socket });
 
-      expect(client.connectionOptions).to.eql({ socket });
+      expect(client.connectionOptions).to.eql({ path: socket });
     });
 
     it('parses host and port correctly', () => {
