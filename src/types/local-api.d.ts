@@ -12,7 +12,7 @@ export namespace LocalAPIResponses {
     model: string;
   }
 
-  interface Device {
+  export interface Device {
     id: number;
     methods: number;
     name: string;
