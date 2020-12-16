@@ -1,11 +1,11 @@
 version: "3.7"
 services:
   gateway:
-    image: mozillaiot/gateway
+    image: webthingsio/gateway
     ports:
       - 8080:8080
     volumes:
-      - ./:/home/node/.mozilla-iot/addons/tellstick-adapter
+      - ./:/home/node/.webthings/addons/tellstick-adapter
 
   telldus:
     build:

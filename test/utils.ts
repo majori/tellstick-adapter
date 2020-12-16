@@ -4,19 +4,13 @@ import TellstickAdapter from '../src/adapter';
 export function createAddonManager() {
   return {
     addAdapter: sinon.fake(),
-  };
-}
-
-export function createManifest(config = {}) {
-  return {
-    moziot: {
-      config,
-    },
+    getGatewayVersion: () => '',
+    getUserProfile: () => { return {}; },
+    getPreferences: () => { return {}; },
   };
 }
 
 export function createAdapter(config: any) {
   const manager = createAddonManager();
-  const manifest = createManifest(config);
-  return new TellstickAdapter(manager, manifest);
+  return new TellstickAdapter(manager);
 }
