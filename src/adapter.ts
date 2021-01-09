@@ -1,30 +1,37 @@
-import { Adapter, AddonManager, Manifest } from 'gateway-addon';
+import { Adapter, AddonManager, Database } from 'gateway-addon';
 import { Methods } from './constants';
 import { TelldusCoreClient, LocalAPIClient } from './clients';
 import { DimmerDevice, SwitchDevice } from './devices';
 import { Client } from './types/client';
+import * as manifest from './manifest.json';
 
 class TellstickAdapter extends Adapter {
-  client: Client;
+  client!: Client;
+  promise: Promise<void>;
 
-  constructor(addonManager: AddonManager, manifest: Manifest<any>) {
-    super(addonManager, TellstickAdapter.name, manifest.name);
+  constructor(addonManager: AddonManager) {
+    super(addonManager, TellstickAdapter.name, manifest.id);
     addonManager.addAdapter(this);
 
-    switch (manifest.moziot.config.client) {
-      case 'local-api':
-        this.client = new LocalAPIClient(manifest.moziot.config);
-        break;
-      case 'telldus-core':
-        this.client = new TelldusCoreClient(manifest.moziot.config);
-        break;
-      default:
-        throw Error('Invalid client type');
-    }
+    const db = new Database(this.packageName);
+    this.promise = db.open().then(() => {
+      return db.loadConfig();
+    }).then((config) => {
+      switch (config.client) {
+        case 'local-api':
+          this.client = new LocalAPIClient(config);
+          break;
+        case 'telldus-core':
+          this.client = new TelldusCoreClient(config);
+          break;
+        default:
+          throw Error('Invalid client type');
+      }
 
-    if (process.env.NODE_ENV !== 'test') {
-      this.startPairing();
-    }
+      if (process.env.NODE_ENV !== 'test') {
+        this.startPairing();
+      }
+    }).catch(console.error);
   }
 
   async startPairing() {

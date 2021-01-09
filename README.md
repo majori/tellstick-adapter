@@ -1,6 +1,6 @@
 # tellstick-adapter
 
-Telldus Tellstick adapter add-on for Mozilla WebThings Gateway
+Telldus Tellstick adapter add-on for WebThings Gateway
 
 ## Usage
 

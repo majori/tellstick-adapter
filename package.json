@@ -2,7 +2,7 @@
   "name": "tellstick-adapter",
   "display_name": "Tellstick",
   "version": "0.2.0",
-  "description": "Telldus Tellstick adapter for Mozilla WebThings Gateway",
+  "description": "Telldus Tellstick adapter for WebThings Gateway",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --listEmittedFiles",
@@ -16,7 +16,6 @@
   "author": "Antti Kivimäki",
   "license": "MIT",
   "keywords": [
-    "mozilla",
     "iot",
     "adapter",
     "tellstick",
@@ -32,13 +31,14 @@
     "@types/nock": "^11.1.0",
     "@types/node": "^8.10.59",
     "@types/sinon": "^7.5.0",
+    "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
     "chai": "^4.2.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "gateway-addon": "git+https://github.com/mozilla-iot/gateway-addon-node.git",
+    "gateway-addon": "^1.0.0",
     "mocha": "^6.2.1",
     "nock": "^11.7.0",
     "prettier": "^1.18.2",
@@ -66,70 +66,5 @@
     "dist/clients/index.js",
     "dist/clients/telldus-core.js",
     "dist/clients/local-api.js"
-  ],
-  "moziot": {
-    "api": {
-      "min": 2,
-      "max": 2
-    },
-    "plugin": true,
-    "exec": "{nodeLoader} {path}",
-    "schema": {
-      "type": "object",
-      "properties": {
-        "client": {
-          "type": "string",
-          "enum": [
-            "local-api",
-            "telldus-core"
-          ],
-          "default": "local-api"
-        }
-      },
-      "required": [
-        "client"
-      ],
-      "dependencies": {
-        "client": {
-          "oneOf": [
-            {
-              "properties": {
-                "client": {
-                  "enum": [
-                    "local-api"
-                  ]
-                },
-                "url": {
-                  "type": "string"
-                },
-                "token": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "url",
-                "token"
-              ]
-            },
-            {
-              "properties": {
-                "client": {
-                  "enum": [
-                    "telldus-core"
-                  ]
-                },
-                "socket": {
-                  "type": "string",
-                  "default": "/tmp/TelldusClient"
-                }
-              },
-              "required": [
-                "socket"
-              ]
-            }
-          ]
-        }
-      }
-    }
-  }
+  ]
 }
