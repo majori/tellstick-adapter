@@ -1,4 +1,3 @@
-import 'mocha';
 import { expect } from 'chai';
 import nock from 'nock';
 import LocalAPIClient from '../../src/clients/local-api';
@@ -9,7 +8,7 @@ describe('local-api', () => {
   const token = 'test_token';
 
   describe('constructor', () => {
-    it('set base URL and headers correctly', () => {
+    it('set base URL and headers correctly', async () => {
       const { client } = new LocalAPIClient({ url, token });
       expect(client.defaults.headers['Authorization']).to.eq(`Bearer ${token}`);
       expect(client.defaults.baseURL).to.include(url);
